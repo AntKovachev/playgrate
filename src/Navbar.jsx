@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Nav, Navbar, NavDropdown, Card, Button, Row, Col, Form, Spinner } from "react-bootstrap";
 import axios from "axios";
-import.meta.env.REACT_APP_API_KEY;
 import { useDebounce } from "use-debounce"; // You may need to install this package.
 
 function TopNavbar() {
@@ -19,9 +18,18 @@ function TopNavbar() {
 
   const fetchGames = async (category, searchTerm) => {
     setLoading(true);
-    const apiUrl = searchTerm
-        ? `http://api.rawg.io/api/games?key=${import.meta.env.VITE_REACT_APP_API_KEY}&ordering=-rating&page_size=10&search=${searchTerm}`
-        : `http://api.rawg.io/api/games?key=${import.meta.env.VITE_REACT_APP_API_KEY}&ordering=-rating&page_size=10&category=${category}`;
+    let apiUrl = `https://api.rawg.io/api/games?key=19e2812a3b574f739acba93c39ae2213&ordering=-rating&page_size=10`;
+
+    if (searchTerm) {
+      apiUrl += `&search=${searchTerm}`;
+    }
+
+    // Fix: Replace category with valid parameters
+    if (category === "new") {
+      apiUrl += "&ordering=-released"; // Orders by newest releases
+    } else if (category === "popular") {
+      apiUrl += "&ordering=-metacritic"; // Orders by Metacritic rating
+    }
 
     try {
       const response = await axios.get(apiUrl);
@@ -35,47 +43,53 @@ function TopNavbar() {
 
   return (
     <>
+      {/* Responsive Navbar */}
       <Navbar expand="lg" className="bg-dark fixed-top py-3">
-        <Container className="d-flex justify-content-between align-items-end" style={{ height: "100%" }}>
+        <Container>
           <Navbar.Brand href="#home" className="fs-2 fw-bold text-white">
             <i className="bi bi-controller me-2"></i> PlayGreat
           </Navbar.Brand>
 
-          <Form className="d-flex ms-auto" onSubmit={(e) => e.preventDefault()}>
-            <Form.Control
-              type="text"
-              placeholder="Search for games..."
-              className="me-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </Form>
+          {/* Toggle Button for Small Screens */}
+          <Navbar.Toggle aria-controls="navbar-nav" className="bg-light" />
 
-          <Nav className="mx-auto">
-            <NavDropdown
-              title="Games"
-              id="basic-nav-dropdown"
-              className="text-white fw-bold"
-              style={{ color: "white" }}
-            >
-              <NavDropdown.Item onClick={() => setCategory("top")} className="fs-5">
-                Top Games of All Time
-              </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => setCategory("new")} className="fs-5">
-                New Releases
-              </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => setCategory("popular")} className="fs-5">
-                Most Popular
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
+          {/* Navbar Items */}
+          <Navbar.Collapse id="navbar-nav" className="justify-content-between">
+            <Form className="d-flex ms-auto my-2 my-lg-0" onSubmit={(e) => e.preventDefault()}>
+              <Form.Control
+                type="text"
+                placeholder="Search for games..."
+                className="me-2"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Form>
 
-          <Button variant="warning" className="fw-bold rounded-pill px-4" style={{ marginTop: "8px" }}>
-            Register
-          </Button>
+            <Nav className="mx-auto">
+              <NavDropdown
+                title={<span className="text-white fs-5 fw-bold">Games</span>}
+                id="basic-nav-dropdown"
+              >
+                <NavDropdown.Item onClick={() => setCategory("top")} className="fs-5">
+                  Top Games of All Time
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("new")} className="fs-5">
+                  New Releases
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("popular")} className="fs-5">
+                  Most Popular
+                </NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+
+            <Button variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0">
+              Register
+            </Button>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
 
+      {/* Games List */}
       <Container className="mt-5 pt-5">
         {loading ? (
           <div className="d-flex justify-content-center my-5">
