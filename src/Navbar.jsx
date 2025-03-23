@@ -5,12 +5,12 @@ import { useDebounce } from "use-debounce"; // You may need to install this pack
 
 function TopNavbar() {
   const [games, setGames] = useState([]);
-  const [category, setCategory] = useState("top");
+  const [category, setCategory] = useState("top-rated");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Debouncing the search term to prevent unnecessary API calls
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 500); // 500ms debounce time
+  // Debounce to limit API calls
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     fetchGames(category, debouncedSearchTerm);
@@ -18,17 +18,26 @@ function TopNavbar() {
 
   const fetchGames = async (category, searchTerm) => {
     setLoading(true);
-    let apiUrl = `https://api.rawg.io/api/games?key=19e2812a3b574f739acba93c39ae2213&ordering=-rating&page_size=10`;
+
+    // Base API URL
+    let apiUrl = `https://api.rawg.io/api/games?key=19e2812a3b574f739acba93c39ae2213&page_size=10`;
 
     if (searchTerm) {
       apiUrl += `&search=${searchTerm}`;
     }
 
-    // Fix: Replace category with valid parameters
-    if (category === "new") {
-      apiUrl += "&ordering=-released"; // Orders by newest releases
-    } else if (category === "popular") {
-      apiUrl += "&ordering=-metacritic"; // Orders by Metacritic rating
+    // Define different API ordering parameters
+    const categoryOrdering = {
+      "top-rated": "-rating",
+      "best-of-all-time": "-metacritic",
+      "new-releases": "-released",
+      "most-popular": "-added",
+      "best-sellers": "-suggestions",
+      "trending": "-updated"
+    };
+
+    if (categoryOrdering[category]) {
+      apiUrl += `&ordering=${categoryOrdering[category]}`;
     }
 
     try {
@@ -50,10 +59,7 @@ function TopNavbar() {
             <i className="bi bi-controller me-2"></i> PlayGreat
           </Navbar.Brand>
 
-          {/* Toggle Button for Small Screens */}
           <Navbar.Toggle aria-controls="navbar-nav" className="bg-light" />
-
-          {/* Navbar Items */}
           <Navbar.Collapse id="navbar-nav" className="justify-content-between">
             <Form className="d-flex ms-auto my-2 my-lg-0" onSubmit={(e) => e.preventDefault()}>
               <Form.Control
@@ -65,20 +71,15 @@ function TopNavbar() {
               />
             </Form>
 
+            {/* Dropdown with multiple categories */}
             <Nav className="mx-auto">
-              <NavDropdown
-                title={<span className="text-white fs-5 fw-bold">Games</span>}
-                id="basic-nav-dropdown"
-              >
-                <NavDropdown.Item onClick={() => setCategory("top")} className="fs-5">
-                  Top Games of All Time
-                </NavDropdown.Item>
-                <NavDropdown.Item onClick={() => setCategory("new")} className="fs-5">
-                  New Releases
-                </NavDropdown.Item>
-                <NavDropdown.Item onClick={() => setCategory("popular")} className="fs-5">
-                  Most Popular
-                </NavDropdown.Item>
+              <NavDropdown title={<span className="text-white fs-5 fw-bold">Categories</span>} id="game-categories">
+                <NavDropdown.Item onClick={() => setCategory("top-rated")} className="fs-5">🏆 Top Rated</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("best-of-all-time")} className="fs-5">🎮 Best of All Time</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("new-releases")} className="fs-5">🆕 New Releases</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("most-popular")} className="fs-5">🔥 Most Popular</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("best-sellers")} className="fs-5">🏅 Best Sellers</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setCategory("trending")} className="fs-5">🎭 Trending Now</NavDropdown.Item>
               </NavDropdown>
             </Nav>
 
@@ -103,7 +104,7 @@ function TopNavbar() {
                   <Card.Img variant="top" src={game.background_image} />
                   <Card.Body>
                     <Card.Title>{game.name}</Card.Title>
-                    <Card.Text>{game.released}</Card.Text>
+                    <Card.Text>📅 {game.released}</Card.Text>
                     <Button variant="primary" onClick={() => alert(`Vote for ${game.name}`)}>
                       Vote
                     </Button>
