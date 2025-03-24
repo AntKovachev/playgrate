@@ -1,18 +1,13 @@
-import Navbar from './Navbar';
-import GameList from './GameList';
-import './App.css'
+import React from 'react';
+import Home from './pages/Home';
+import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function App() {
-
     return (
-        <>
-            <div>
-                <Navbar />
-            </div>
-        </>
-    )
+        <Home/>
+    );
 }
 
-export default App
+export default App;
