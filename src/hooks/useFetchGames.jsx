@@ -11,7 +11,7 @@ function useFetchGames(category, searchTerm) {
     const fetchGames = async () => {
       setLoading(true);
 
-      let apiUrl = `https://api.rawg.io/api/games?key=19e2812a3b574f739acba93c39ae2213&page_size=10`;
+      let apiUrl = `https://api.rawg.io/api/games?key=19e2812a3b574f739acba93c39ae2213&page_size=30`;
 
       if (debouncedSearchTerm) {
         apiUrl += `&search=${debouncedSearchTerm}`;

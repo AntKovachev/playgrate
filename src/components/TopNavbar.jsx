@@ -7,7 +7,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
     <Navbar expand="lg" className="bg-dark fixed-top py-3 shadow-sm">
       <Container>
         {/* Brand Logo */}
-        <Navbar.Brand as={Link} to="/" className="fs-2 fw-bold text-warning d-flex align-items-center">
+        <Navbar.Brand as={Link} to="/" className="fs-2 fw-bold text-light d-flex align-items-center">
           <i className="bi bi-controller me-2"></i> PlayGreat
         </Navbar.Brand>
 
@@ -30,7 +30,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
               style={{ minWidth: "250px" }}
             />
             <Button
-              variant="warning"
+              variant="light"
               className="fw-bold shadow-sm rounded-pill px-4"
               style={{ minWidth: "130px" }}
             >
@@ -42,7 +42,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
             <Button
               as={Link}
               to="/login"
-              variant="outline-warning"
+              variant="light"
               className="fw-bold rounded-pill px-4 me-2"
               style={{ minWidth: "120px" }}
             >
@@ -51,7 +51,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
             <Button
               as={Link}
               to="/register"
-              variant="warning"
+              variant="light"
               className="fw-bold rounded-pill px-4"
             >
               Register
