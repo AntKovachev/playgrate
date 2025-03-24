@@ -46,3 +46,6 @@
   .main-content {
     padding-top: 5rem; /* Adjust this value based on the height of your Navbar */
   }
+body{
+background-color: #17191b !important;
+}
