@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
 import { Button, Form, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import TopNavbar from '../TopNavbar';
 
 const Login = () => {
+    const location = useLocation();
+    const successMessage = location.state?.successMessage || '';
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [token, setToken] = useState('');
+    const [error] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try {
-            const response = await axios.post('/api/login', { email, password });
-            setToken(response.data.token);
-            setError('');
-        } catch (err) {
-            setError(err.response.data.error || 'Invalid credentials');
-            setToken('');
-        }
+        // Add login logic here
     };
 
     return (
+        <>
+        <TopNavbar />
         <Form onSubmit={handleLogin}>
             <h3>Login</h3>
+            {successMessage && <Alert variant="success">{successMessage}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
-            {token && <Alert variant="success">Logged in successfully</Alert>}
             <Form.Group className="mb-3">
                 <Form.Label>Email</Form.Label>
                 <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -35,6 +32,7 @@ const Login = () => {
             </Form.Group>
             <Button variant="primary" type="submit">Login</Button>
         </Form>
+        </>
     );
 };
 

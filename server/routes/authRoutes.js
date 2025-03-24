@@ -5,7 +5,6 @@ import User from './models/User';
 
 const router = express.Router();
 
-// Register User
 router.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,7 +23,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login User
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -44,7 +42,6 @@ router.post('/login', async (req, res) => {
 
 // Logout User
 router.post('/logout', (req, res) => {
-    // Invalidate the token or just send a response (no special logic needed if using JWT)
     res.send('User logged out');
 });
 

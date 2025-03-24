@@ -1,11 +1,12 @@
 import React from "react";
 import { Container, Nav, Navbar, NavDropdown, Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-function TopNavbar({setCategory, searchTerm, setSearchTerm }) {
+function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
   return (
     <Navbar expand="lg" className="bg-dark fixed-top py-3">
       <Container>
-        <Navbar.Brand href="#home" className="fs-2 fw-bold text-white">
+        <Navbar.Brand as={Link} to="/" className="fs-2 fw-bold text-white">
           <i className="bi bi-controller me-2"></i> PlayGreat
         </Navbar.Brand>
 
@@ -32,10 +33,11 @@ function TopNavbar({setCategory, searchTerm, setSearchTerm }) {
             </NavDropdown>
           </Nav>
 
-          <Button variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0 mx-5">
+          {/* ✅ Use Link for navigation */}
+          <Button as={Link} to="/register" variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0 mx-5">
             Register
           </Button>
-          <Button variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0">
+          <Button as={Link} to="/login" variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0">
             Login
           </Button>
         </Navbar.Collapse>
