@@ -33,13 +33,13 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
             </NavDropdown>
           </Nav>
 
-          {/* ✅ Use Link for navigation */}
-          <Button as={Link} to="/register" variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0 mx-5">
-            Register
-          </Button>
           <Button as={Link} to="/login" variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0">
             Login
           </Button>
+          <Button as={Link} to="/register" variant="warning" className="fw-bold rounded-pill px-4 my-2 my-lg-0 mx-5">
+            Register
+          </Button>
+
         </Navbar.Collapse>
       </Container>
     </Navbar>
