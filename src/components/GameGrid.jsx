@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
-import Badge from "react-bootstrap/esm/Badge";
 import GameModal from "./GameModal";
 import CustomPagination from "./Pagination";
 
@@ -11,18 +10,16 @@ function GameGrid({ games, loading }) {
   const gamesPerPage = 9; // Number of games per page
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Calculate total pages
   const totalPages = Math.ceil(games.length / gamesPerPage);
 
-  // Paginate games
   const paginatedGames = games.slice(
     (currentPage - 1) * gamesPerPage,
     currentPage * gamesPerPage
   );
 
   const handleGameClick = (game) => {
+    console.log("Game clicked:", game);
     setSelectedGame(game);
-    console.log("Selected game:", game);
     setShowModal(true);
   };
 
@@ -39,39 +36,23 @@ function GameGrid({ games, loading }) {
               <Col key={game.id} xs={12} sm={6} md={4}>
                 <Card
                   className="bg-dark text-light h-100"
-                  onClick={() => handleGameClick(game)} // Handle click
+                  onClick={() => handleGameClick(game)}
                   style={{ cursor: "pointer" }}
                 >
                   <Card.Img
                     variant="top"
                     src={game.background_image || "https://via.placeholder.com/300"}
-                    style={{ objectFit: "cover", height: "200px" }}
+                    style={{ objectFit: "cover", height: "150px" }} // Rectangular images
                   />
                   <Card.Body>
                     <Card.Title>{game.name}</Card.Title>
-                    <Card.Text>Rating: {game.rating || "N/A"}</Card.Text>
-                    <Card.Text>📅 Released: {game.released}</Card.Text>
-                    <Card.Text>
-                      ⭐ Rating: {game.rating} / {game.rating_top}
-                    </Card.Text>
-                    {game.metacritic && (
-                      <Card.Text>
-                        🎯 Metacritic: <Badge bg="success">{game.metacritic}</Badge>
-                      </Card.Text>
-                    )}
-                    <Card.Text>
-                      🎮 Platforms: {game.platforms.map((p) => p.platform.name).join(", ")}
-                    </Card.Text>
-                    <Card.Text>
-                      🏷 Genres: {game.genres.map((g) => g.name).join(", ")}
-                    </Card.Text>
+                    <Card.Text>⭐ Rating: {game.rating || "N/A"}</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
             ))}
           </Row>
 
-          {/* Pagination */}
           <CustomPagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -80,7 +61,6 @@ function GameGrid({ games, loading }) {
         </>
       )}
 
-      {/* Game Modal */}
       {selectedGame && (
         <GameModal
           show={showModal}
