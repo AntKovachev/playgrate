@@ -1,22 +1,40 @@
-import React from "react";
-import { Container, Row, Col, Card, Button, Spinner, Badge } from "react-bootstrap";
-import "../assets/css/GameGrid.css";
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import Badge from "react-bootstrap/esm/Badge";
+import GameModal from "./GameModal";
 
 function GameGrid({ games, loading }) {
+  const [selectedGame, setSelectedGame] = useState(null); // Track the selected game
+  const [showModal, setShowModal] = useState(false); // Track modal visibility
+
+  const handleGameClick = (game) => {
+    setSelectedGame(game); // Set the selected game
+    setShowModal(true); // Show the modal
+  };
+
   return (
-    <Container className="mt-5 pt-5">
+    <Container className="pt-3">
       {loading ? (
         <div className="d-flex justify-content-center my-5">
-          <Spinner animation="border" variant="primary" />
+          <Spinner animation="border" variant="light" />
         </div>
       ) : (
-        <Row>
+        <Row className="g-4">
           {games.map((game) => (
-            <Col key={game.id} sm={12} md={6} lg={4}>
-              <Card className="mb-4 game-card">
-                <Card.Img variant="top" src={game.background_image} />
+            <Col key={game.id} xs={12} sm={6} md={4}>
+              <Card
+                className="bg-dark text-light h-100"
+                onClick={() => handleGameClick(game)} // Handle click
+                style={{ cursor: "pointer" }}
+              >
+                <Card.Img
+                  variant="top"
+                  src={game.background_image || "https://via.placeholder.com/300"}
+                  style={{ objectFit: "cover", height: "200px" }}
+                />
                 <Card.Body>
                   <Card.Title>{game.name}</Card.Title>
+                  <Card.Text>Rating: {game.rating || "N/A"}</Card.Text>
                   <Card.Text>📅 Released: {game.released}</Card.Text>
                   <Card.Text>
                     ⭐ Rating: {game.rating} / {game.rating_top}
@@ -37,6 +55,14 @@ function GameGrid({ games, loading }) {
             </Col>
           ))}
         </Row>
+      )}
+      {/* Game Modal */}
+      {selectedGame && (
+        <GameModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          game={selectedGame}
+        />
       )}
     </Container>
   );
