@@ -3,7 +3,6 @@ import {
   Container,
   Nav,
   Navbar,
-  NavDropdown,
   Form,
   Button,
 } from "react-bootstrap";
@@ -21,7 +20,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
 
         <Navbar.Collapse id="navbar-nav" className="justify-content-between">
           <Form
-            className="d-flex ms-auto my-2 my-lg-0"
+            className="d-flex ms-auto my-2 my-lg-0 align-items-center"
             onSubmit={(e) => e.preventDefault()}
           >
             <Form.Control
@@ -31,68 +30,22 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Button variant="warning" className="fw-bold shadow-sm">
-              Search
+            <Button
+              variant="warning"
+              className="fw-bold shadow-sm rounded-pill px-4"
+              style={{ minWidth: "120px" }}
+            >
+              <i className="bi bi-search me-2"></i> Search
             </Button>
           </Form>
 
-          <Nav className="mx-auto">
-            <NavDropdown
-              title={
-                <span className="text-white fs-5 fw-bold">Categories</span>
-              }
-              id="game-categories"
-              menuVariant="dark"
-              className="categories-dropdown"
-            >
-              <NavDropdown.Item
-                onClick={() => setCategory("top-rated")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-star-fill text-warning me-2"></i> Top Rated
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                onClick={() => setCategory("best-of-all-time")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-trophy-fill text-success me-2"></i> Best of
-                All Time
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                onClick={() => setCategory("new-releases")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-calendar-event-fill text-primary me-2"></i>{" "}
-                New Releases
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                onClick={() => setCategory("most-popular")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-fire text-danger me-2"></i> Most Popular
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                onClick={() => setCategory("best-sellers")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-cart-fill text-info me-2"></i> Best Sellers
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                onClick={() => setCategory("trending")}
-                className="fs-6 d-flex align-items-center"
-              >
-                <i className="bi bi-graph-up-arrow text-warning me-2"></i>{" "}
-                Trending Now
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center ms-3">
             <Button
               as={Link}
               to="/login"
               variant="outline-warning"
               className="fw-bold rounded-pill px-4 me-2"
+              style={{ minWidth: "120px" }}
             >
               Login
             </Button>
@@ -101,6 +54,7 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
               to="/register"
               variant="warning"
               className="fw-bold rounded-pill px-4"
+              style={{ minWidth: "120px" }}
             >
               Register
             </Button>

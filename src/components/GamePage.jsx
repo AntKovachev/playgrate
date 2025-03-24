@@ -1,42 +1,30 @@
 import React, { useState } from "react";
 import TopNavbar from "./TopNavbar";
+import Sidebar from "./Sidebar";
 import GameGrid from "./GameGrid";
 import useFetchGames from "../hooks/useFetchGames";
-import { Pagination } from "react-bootstrap";
 
 function GamePage() {
   const [category, setCategory] = useState("top-rated");
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const gamesPerPage = 9;
 
   const { games, loading } = useFetchGames(category, searchTerm);
-
-  const totalPages = Math.ceil(games.length / gamesPerPage);
-  const currentGames = games.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
 
   return (
     <>
       <TopNavbar category={category} setCategory={setCategory} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <GameGrid games={currentGames} loading={loading} />
-
-      <Pagination>
-        <Pagination.Prev onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)} />
-        {[...Array(totalPages)].map((_, index) => (
-          <Pagination.Item
-            key={index + 1}
-            active={index + 1 === currentPage}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Pagination.Item>
-        ))}
-        <Pagination.Next onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)} />
-      </Pagination>
+      <div className="container-fluid bg-dark text-light" style={{ marginTop: "56px", minHeight: "100vh" }}>
+        <div className="row">
+          {/* Sidebar */}
+          <div className="col-12 col-md-3 mb-3 mb-md-0">
+            <Sidebar setCategory={setCategory} />
+          </div>
+          {/* Main Content */}
+          <div className="col-12 col-md-9">
+            <GameGrid games={games} loading={loading} />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

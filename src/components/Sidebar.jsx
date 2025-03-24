@@ -1,5 +1,6 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
+import "../assets/css/Sidebar.css";
 
 function Sidebar({ setCategory }) {
   const categories = [
@@ -12,15 +13,14 @@ function Sidebar({ setCategory }) {
   ];
 
   return (
-    <div className="bg-secondary p-3 rounded">
-      <h4 className="fw-bold mb-4 text-light">Categories</h4>
+    <div className="sidebar d-flex flex-column">
+      <h4 className="text-light">Categories</h4>
       <Nav className="flex-column">
         {categories.map((category) => (
           <Nav.Link
             key={category.id}
-            onClick={() => {setCategory(category.id);}}
-            className="text-light d-flex align-items-center mb-2 fs-5"
-            style={{ cursor: "pointer" }}
+            onClick={() => setCategory(category.id)}
+            className="nav-link d-flex align-items-center"
           >
             <i className={`${category.icon} me-2`}></i>
             {category.label}
