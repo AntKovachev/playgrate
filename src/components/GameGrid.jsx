@@ -1,5 +1,6 @@
 import React from "react";
-import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Spinner, Badge } from "react-bootstrap";
+import "../assets/css/GameGrid.css";
 
 function GameGrid({ games, loading }) {
   return (
@@ -12,14 +13,25 @@ function GameGrid({ games, loading }) {
         <Row>
           {games.map((game) => (
             <Col key={game.id} sm={12} md={6} lg={4}>
-              <Card className="mb-4">
+              <Card className="mb-4 game-card">
                 <Card.Img variant="top" src={game.background_image} />
                 <Card.Body>
                   <Card.Title>{game.name}</Card.Title>
-                  <Card.Text>📅 {game.released}</Card.Text>
-                  <Button variant="primary" onClick={() => alert(`Vote for ${game.name}`)}>
-                    Vote
-                  </Button>
+                  <Card.Text>📅 Released: {game.released}</Card.Text>
+                  <Card.Text>
+                    ⭐ Rating: {game.rating} / {game.rating_top}
+                  </Card.Text>
+                  {game.metacritic && (
+                    <Card.Text>
+                      🎯 Metacritic: <Badge bg="success">{game.metacritic}</Badge>
+                    </Card.Text>
+                  )}
+                  <Card.Text>
+                    🎮 Platforms: {game.platforms.map(p => p.platform.name).join(", ")}
+                  </Card.Text>
+                  <Card.Text>
+                    🏷 Genres: {game.genres.map(g => g.name).join(", ")}
+                  </Card.Text>
                 </Card.Body>
               </Card>
             </Col>

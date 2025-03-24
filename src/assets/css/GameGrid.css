@@ -1,0 +1,45 @@
+/* Darken the background of the entire grid */
+.game-grid {
+    background-color: #1a1a1a; /* Dark background */
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  /* Enhance the cards */
+  .game-card {
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #2c2c2c !important; /* Dark card background */
+  }
+
+  .game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  /* Card image styling */
+  .game-card img {
+    border-bottom: 2px solid #444;
+    border-radius: 8px 8px 0 0;
+  }
+
+  /* Card body styling */
+  .game-card .card-body {
+    color: #f5f5f5; /* Lighter text for contrast */
+  }
+
+  /* Button styling */
+  .game-card .btn {
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+
+  .game-card .btn:hover {
+    background-color: #0056b3;
+  }
+body {
+    background-color: #212529 !important;/* Dark card background */
+}
