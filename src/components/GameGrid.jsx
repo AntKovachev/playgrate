@@ -4,12 +4,13 @@ import Badge from "react-bootstrap/esm/Badge";
 import GameModal from "./GameModal";
 
 function GameGrid({ games, loading }) {
-  const [selectedGame, setSelectedGame] = useState(null); // Track the selected game
-  const [showModal, setShowModal] = useState(false); // Track modal visibility
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleGameClick = (game) => {
-    setSelectedGame(game); // Set the selected game
-    setShowModal(true); // Show the modal
+    setSelectedGame(game);
+    console.log("Selected game:", game);
+    setShowModal(true);
   };
 
   return (

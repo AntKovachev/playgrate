@@ -1,11 +1,15 @@
 /* Sidebar container */
 .sidebar {
-  background-color: #343a40; /* Dark background */
-  height: 100vh; /* Full viewport height */
-  padding: 20px;
-  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3);
-  overflow-y: auto; /* Scrollable content if it overflows */
-}
+    background-color: #343a40; /* Dark background */
+    height: 50vh; /* Set the height to 50% of the viewport height */
+    padding: 20px;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Scrollable content if it overflows */
+    position: sticky; /* Stick the sidebar in place */
+    top: 0; /* Keep the sidebar at the top of the viewport */
+    z-index: 1000; /* Ensure the sidebar stays on top of other content */
+  }
+
 
 /* Sidebar links */
 .sidebar .nav-link {
