@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import { Button, Form, Alert, Card } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import TopNavbar from '../TopNavbar';
 
 const Login = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const successMessage = location.state?.successMessage || '';
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error] = useState('');
+    const [error, setError] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        // Add login logic here
+        setError("");
+
+        console.log("Email:", email); // Debug email
+        console.log("Password:", password); // Debug password
+
+        try {
+            const response = await axios.post("http://localhost:5000/api/login", { email, password });
+            console.log("Response from backend:", response.data);
+
+            // Store token in localStorage
+            localStorage.setItem("token", response.data.token);
+
+            // Redirect user to a protected page (e.g., dashboard)
+            navigate("/");
+        } catch (err) {
+            console.error("Error during login:", err.response?.data || err.message);
+            const errorMessage = err.response?.data?.message || "An unexpected error occurred. Please try again.";
+            setError(errorMessage);
+        }
     };
 
     return (
