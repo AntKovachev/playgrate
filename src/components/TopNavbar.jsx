@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Navbar, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { AuthContext } from "./Auth/AuthContext";
 
 function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
   return (
     <Navbar expand="lg" className="bg-dark fixed-top py-3 shadow-sm">
       <Container>
-        {/* Brand Logo */}
+
         <Navbar.Brand as={Link} to="/" className="fs-2 fw-bold text-light d-flex align-items-center">
           <i className="bi bi-controller me-2"></i> PlayGreat
         </Navbar.Brand>
 
-        {/* Navbar Toggle for Mobile */}
         <Navbar.Toggle aria-controls="navbar-nav" className="bg-light" />
 
-        {/* Navbar Content */}
         <Navbar.Collapse id="navbar-nav" className="justify-content-between">
-          {/* Search Bar */}
+
           <Form
             className="d-flex ms-auto my-2 my-lg-0 align-items-center"
             onSubmit={(e) => e.preventDefault()}
@@ -39,23 +45,38 @@ function TopNavbar({ setCategory, searchTerm, setSearchTerm }) {
           </Form>
 
           <div className="d-flex align-items-center ms-auto">
-            <Button
-              as={Link}
-              to="/login"
-              variant="light"
-              className="fw-bold rounded-pill px-4 me-2"
-              style={{ minWidth: "120px" }}
-            >
-              Login
-            </Button>
-            <Button
-              as={Link}
-              to="/register"
-              variant="light"
-              className="fw-bold rounded-pill px-4"
-            >
-              Register
-            </Button>
+            {isLoggedIn ? (
+              <>
+                <Button
+                  variant="light"
+                  className="fw-bold rounded-pill px-4 me-2"
+                  style={{ minWidth: "120px" }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  as={Link}
+                  to="/login"
+                  variant="light"
+                  className="fw-bold rounded-pill px-4 me-2"
+                  style={{ minWidth: "120px" }}
+                >
+                  Login
+                </Button>
+                <Button
+                  as={Link}
+                  to="/register"
+                  variant="light"
+                  className="fw-bold rounded-pill px-4"
+                >
+                  Register
+                </Button>
+              </>
+            )}
           </div>
         </Navbar.Collapse>
       </Container>

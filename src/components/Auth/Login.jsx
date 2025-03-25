@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Form, Alert, Card } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TopNavbar from '../TopNavbar';
+import { AuthContext } from './AuthContext';
 
 const Login = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { setIsLoggedIn } = useContext(AuthContext);
     const successMessage = location.state?.successMessage || '';
 
     const [email, setEmail] = useState('');
@@ -17,17 +19,14 @@ const Login = () => {
         e.preventDefault();
         setError("");
 
-        console.log("Email:", email); // Debug email
-        console.log("Password:", password); // Debug password
-
         try {
             const response = await axios.post("http://localhost:5000/api/login", { email, password });
             console.log("Response from backend:", response.data);
 
-            // Store token in localStorage
             localStorage.setItem("token", response.data.token);
 
-            // Redirect user to a protected page (e.g., dashboard)
+            setIsLoggedIn(true);
+
             navigate("/");
         } catch (err) {
             console.error("Error during login:", err.response?.data || err.message);
@@ -38,7 +37,6 @@ const Login = () => {
 
     return (
         <>
-            <TopNavbar />
             <div className="d-flex justify-content-center align-items-center min-vh-100">
                 <Card style={{ width: '100%', maxWidth: '400px' }} className="p-4 shadow-sm rounded">
                     <h3 className="text-center mb-4">Login</h3>
