@@ -46,6 +46,15 @@
   .main-content {
     padding-top: 5rem; /* Adjust this value based on the height of your Navbar */
   }
-body{
-background-color: #17191b !important;
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body {
+    background: linear-gradient(-45deg, #92b6db, #414750, #17191b, #1f1f1f);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+    color: white;
 }
