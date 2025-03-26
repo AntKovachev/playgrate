@@ -1,0 +1,33 @@
+.search-bar .list-group {
+    z-index: 1050; /* Ensure it appears above other elements */
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 10px;
+  }
+
+  .search-bar .list-group-item {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-bar .list-group-item:hover {
+    background-color: #f8f9fa;
+  }
+
+  .search-bar .form-control {
+    border-radius: 50px !important;
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+  }
+
+  .search-bar .btn {
+    border-radius: 50px !important;
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    font-weight: bold;
+  }
+
+  .search-bar .btn:hover {
+    background-color: #e0a800 !important;
+    color: #fff !important;
+  }
