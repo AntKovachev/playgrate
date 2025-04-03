@@ -21,10 +21,13 @@ function MyAccount() {
 
   if (!isLoggedIn) {
     return (
-      <Container className="mt-5 text-center">
-        <h2 className="text-light">Access Denied</h2>
-        <p className="text-muted">You need to log in to access your account.</p>
-      </Container>
+        <Container className="mt-5 text-center">
+            <h2 className="text-light">Access Denied</h2>
+            <div className="alert-container">
+            <p className="text-warning">You need to log in to access your account.</p>
+            <Button href="/login" variant="outline-warning" className="fw-bold">Login</Button>
+            </div>
+        </Container>
     );
   }
 
