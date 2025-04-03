@@ -20,7 +20,7 @@ const Login = () => {
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:5000/api/login", { email, password });
+            const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
             console.log("Response from backend:", response.data);
 
             localStorage.setItem("token", response.data.token);
