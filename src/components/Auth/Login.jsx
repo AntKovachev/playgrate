@@ -8,7 +8,7 @@ import { AuthContext } from './AuthContext';
 const Login = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { setIsLoggedIn } = useContext(AuthContext);
+    const { setIsLoggedIn, setUserData } = useContext(AuthContext);
     const successMessage = location.state?.successMessage || '';
 
     const [email, setEmail] = useState('');
@@ -26,6 +26,7 @@ const Login = () => {
             localStorage.setItem("token", response.data.token);
 
             setIsLoggedIn(true);
+            setUserData({ token: response.data.token, ...response.data.user });
 
             navigate("/");
         } catch (err) {

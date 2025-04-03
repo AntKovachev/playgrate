@@ -48,7 +48,7 @@ exports.loginUser = async (req, res) => {
 
     res.json({
       token: generateToken(user._id),
-      user: { id: user._id, email: user.email },
+      user: { id: user._id, username: user.username, email: user.email },
       message: "User logged in successfully",
     });
   } catch (error) {
@@ -61,3 +61,31 @@ exports.getProfile = (req, res) => {
   res.json({ message: "Welcome to your profile!", user: req.user });
 };
 
+
+//FIX ME
+exports.changePassword = async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: "Current password is incorrect" });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      user.password = hashedPassword;
+      await user.save();
+
+      res.json({ message: "Password changed successfully!" });
+    } catch (error) {
+      console.error("Error changing password:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };

@@ -1,22 +1,37 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "./Auth/AuthContext";
 import { Form, Button, Alert, Card, Container } from "react-bootstrap";
+import axios from "axios";
 
 function MyAccount() {
-  const { isLoggedIn } = useContext(AuthContext);
-  const [user, setUser] = useState({
-    username: "testuser",
-    email: "test@example.com",
-  });
+  const { isLoggedIn, userData } = useContext(AuthContext);
   const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
 
-    console.log("Changing password:", passwords);
-    setMessage("Password changed successfully!");
-    setPasswords({ currentPassword: "", newPassword: "" });
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/change-password",
+        {
+          currentPassword: passwords.currentPassword,
+          newPassword: passwords.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+
+      setMessage(response.data.message);
+      setPasswords({ currentPassword: "", newPassword: "" });
+    } catch (error) {
+        console.error("Error changing password:", error);
+      setError(error.response?.data?.error || "An error occurred.");
+    }
   };
 
   if (!isLoggedIn) {
@@ -40,13 +55,14 @@ function MyAccount() {
         <Card.Body>
           <div className="mb-4">
             <h4 className="text-warning">Account Information</h4>
-            <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Username:</strong> {userData.username}</p>
+            <p><strong>Email:</strong> {userData.email}</p>
           </div>
 
           <div>
             <h4 className="text-warning">Change Password</h4>
             {message && <Alert variant="success">{message}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handlePasswordChange}>
               <Form.Group className="mb-3">
                 <Form.Label>Current Password</Form.Label>
