@@ -9,29 +9,28 @@ const generateToken = (userId) => {
 };
 
 exports.registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+    const { username, email, password } = req.body;
 
-  try {
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      if (existingUser.email === email) {
-        return res.status(400).json({ error: "Email is already in use" });
+    try {
+      const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+      if (existingUser) {
+        if (existingUser.email === email) {
+          return res.status(400).json({ error: "Email is already in use" });
+        }
+        if (existingUser.username === username) {
+          return res.status(400).json({ error: "Username is already taken" });
+        }
       }
-      if (existingUser.username === username) {
-        return res.status(400).json({ error: "Username is already taken" });
-      }
+
+      const newUser = new User({ username, email, password });
+      await newUser.save();
+
+      res.status(201).json({ message: "User registered successfully" });
+    } catch (error) {
+      console.error("Error during registration:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    console.error("Error during registration:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
+  };
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
