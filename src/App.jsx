@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import TopNavbar from './components/TopNavbar';
+import MyAccount from "./components/MyAccount";
 import { AuthProvider } from './components/Auth/AuthContext';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/my-account" element={<MyAccount/>} />
                 </Routes>
             </Router>
         </AuthProvider>

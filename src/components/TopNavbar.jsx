@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Container, Navbar, Button } from "react-bootstrap";
+import { Container, Navbar, Button, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./Auth/AuthContext";
 import SearchBar from "./SearchBar";
@@ -35,14 +35,23 @@ function TopNavbar() {
 
           <div className="d-flex align-items-center ms-auto">
             {isLoggedIn ? (
-              <Button
-                variant="light"
-                className="fw-bold rounded-pill px-4 me-2"
-                style={{ minWidth: "120px" }}
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+              <>
+                <Nav.Link
+                  as={Link}
+                  to="/my-account"
+                  className="text-light fw-bold me-3"
+                >
+                  My Account
+                </Nav.Link>
+                <Button
+                  variant="light"
+                  className="fw-bold rounded-pill px-4 me-2"
+                  style={{ minWidth: "120px" }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </>
             ) : (
               <>
                 <Button
