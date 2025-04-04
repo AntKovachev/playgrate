@@ -1,6 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./Auth/AuthContext";
 import { Form, Button, Alert, Card, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function MyAccount() {
@@ -8,6 +9,14 @@ function MyAccount() {
   const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -33,18 +42,6 @@ function MyAccount() {
       setError(error.response?.data?.error || "An error occurred.");
     }
   };
-
-  if (!isLoggedIn) {
-    return (
-        <Container className="mt-5 text-center">
-            <h2 className="text-light">Access Denied</h2>
-            <div className="alert-container">
-            <p className="text-warning">You need to log in to access your account.</p>
-            <Button href="/login" variant="outline-warning" className="fw-bold">Login</Button>
-            </div>
-        </Container>
-    );
-  }
 
   return (
     <Container className="mt-5">
