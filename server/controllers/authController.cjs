@@ -61,8 +61,6 @@ exports.getProfile = (req, res) => {
   res.json({ message: "Welcome to your profile!", user: req.user });
 };
 
-
-//FIX ME
 exports.changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.id;
@@ -78,9 +76,7 @@ exports.changePassword = async (req, res) => {
         return res.status(401).json({ error: "Current password is incorrect" });
       }
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-      user.password = hashedPassword;
+      user.password = newPassword;
       await user.save();
 
       res.json({ message: "Password changed successfully!" });
@@ -88,4 +84,4 @@ exports.changePassword = async (req, res) => {
       console.error("Error changing password:", error);
       res.status(500).json({ error: "Internal server error" });
     }
-  };
+};
