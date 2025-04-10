@@ -39,15 +39,25 @@ function MyAccount() {
       );
 
       setMessage(response.data.message);
+      setError("");
       setPasswords({ currentPassword: "", newPassword: "" });
+
+      setTimeout(() => {
+        setMessage("");
+      }, 4000);
     } catch (error) {
       console.error("Error changing password:", error);
       setError(error.response?.data?.error || "An error occurred.");
+      setMessage("");
+
+      setTimeout(() => {
+        setError("");
+      }, 4000);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading indicator while checking authentication
+    return <div>Loading...</div>;
   }
 
   return (
