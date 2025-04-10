@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function MyAccount() {
-  const { isLoggedIn, userData } = useContext(AuthContext);
+  const { isLoggedIn, userData, loading } = useContext(AuthContext);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -15,10 +15,10 @@ function MyAccount() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!loading && !isLoggedIn) { // Wait for loading to complete
       navigate("/login");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, loading, navigate]);
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -45,6 +45,10 @@ function MyAccount() {
       setError(error.response?.data?.error || "An error occurred.");
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while checking authentication
+  }
 
   return (
     <Container className="mt-5">

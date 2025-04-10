@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userData, setUserData] = useState("");
+    const [loading, setLoading] = useState(true); // New loading state
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
             if (user) {
                 setIsLoggedIn(true);
                 setUserData({ token, ...JSON.parse(user) });
+                setLoading(false);
             } else {
                 axios
                     .get("http://localhost:5000/api/auth/profile", {
@@ -29,13 +31,16 @@ export const AuthProvider = ({ children }) => {
                         console.error("Error fetching user data:", error);
                         setIsLoggedIn(false);
                         setUserData(null);
-                    });
+                    })
+                    .finally(() => setLoading(false));
             }
+        } else {
+            setLoading(false);
         }
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userData, setUserData }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userData, setUserData, loading }}>
             {children}
         </AuthContext.Provider>
     );

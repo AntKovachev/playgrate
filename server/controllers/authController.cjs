@@ -63,7 +63,6 @@ exports.getProfile = (req, res) => {
 
 exports.changePassword = async (req, res) => {
     const { id, currentPassword, newPassword } = req.body;
-    console.log("Received data:", req.body);
     try {
         const user = await User.findById(id);
         if (!user) {
