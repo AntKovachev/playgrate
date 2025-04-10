@@ -20,13 +20,13 @@ const protect = async (req, res, next) => {
       token,
       process.env.JWT_SECRET || "defaultsecret"
     );
-    req.user = await User.findById(decoded.id).select("-password");
+
+    req.user = { user_id: decoded.id };
+
     next();
   } catch (error) {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      console.error("Error verifying token:", error);
-      res.status(401).json({ message: "Not authorized, invalid token" });
+    console.error("Error verifying token:", error);
+    res.status(401).json({ message: "Not authorized, invalid token" });
   }
 };
 

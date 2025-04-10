@@ -20,10 +20,6 @@ function TopNavbar() {
     setTimeout(() => setLogoutMessage(""), 3000);
   };
 
-  const handleSearch = (query) => {
-    console.log("Search query:", query);
-  };
-
   const handleGameSelect = (game) => {
     setSelectedGame(game); // Set the selected game
     setShowModal(true); // Show the modal
@@ -47,7 +43,6 @@ function TopNavbar() {
             <SearchBar
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              onSearch={handleSearch}
               onGameSelect={handleGameSelect} // Pass the callback to SearchBar
             />
 

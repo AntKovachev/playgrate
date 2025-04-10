@@ -18,7 +18,6 @@ function GameGrid({ games, loading }) {
   );
 
   const handleGameClick = (game) => {
-    console.log("Game clicked:", game);
     setSelectedGame(game);
     setShowModal(true);
   };

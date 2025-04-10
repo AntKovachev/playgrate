@@ -20,7 +20,6 @@ const Login = () => {
 
         try {
             const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-            console.log("Response from backend:", response.data);
 
             const user = { ...response.data.user, _id: response.data.user.id };
             delete user.id;

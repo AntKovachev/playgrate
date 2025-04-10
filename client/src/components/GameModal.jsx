@@ -3,12 +3,14 @@ import { Modal, Button, Form, Carousel, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./Auth/AuthContext";
 import useFetchGameTrailers from "../hooks/useFetchGameTrailers";
-import moment from "moment";  // Import moment.js for date formatting
+import moment from "moment";
 
 function GameModal({ show, onHide, game }) {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [commentSubmitted, setCommentSubmitted] = useState(false); // Added state for submission status
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editedComment, setEditedComment] = useState("");
+  const [commentSubmitted, setCommentSubmitted] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
 
   const { trailers, loading: trailersLoading } = useFetchGameTrailers(game?.id);
@@ -66,16 +68,72 @@ function GameModal({ show, onHide, game }) {
       setComments((prevComments) => [data, ...prevComments]);
       setComment("");
 
-      // Show success message
       setCommentSubmitted(true);
 
-      // Hide success message after 3 seconds
       setTimeout(() => {
         setCommentSubmitted(false);
       }, 3000);
     } catch (error) {
       console.error("Error submitting comment:", error);
       alert("Something went wrong.");
+    }
+  };
+
+  const handleEditComment = async (commentId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ comment_text: editedComment }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Response error text:", errorText);
+        throw new Error("Failed to update comment");
+      }
+
+      const updatedComment = await response.json();
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment._id === commentId ? updatedComment : comment
+        )
+      );
+      setEditingCommentId(null);
+      setEditedComment("");
+    } catch (error) {
+      console.error("Error updating comment:", error);
+      alert("Failed to update comment.");
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete comment");
+      }
+
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      alert("Failed to delete comment.");
     }
   };
 
@@ -185,11 +243,63 @@ function GameModal({ show, onHide, game }) {
                     <p className="mb-1 fw-bold">
                       {comment.user_id?.username || "Unknown User"}
                     </p>
-                    <p className="mb-0 text-muted">{comment.comment_text}</p>
-                    {/* Display comment time */}
-                    <p className="text-muted mt-2" style={{ fontSize: "0.7rem"}}>
+                    {editingCommentId === comment._id ? (
+                      <Form.Control
+                        as="textarea"
+                        rows={2}
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                      />
+                    ) : (
+                      <p className="mb-0 text-muted">{comment.comment_text}</p>
+                    )}
+                    <p className="text-muted mt-2" style={{ fontSize: "0.7rem" }}>
                       {moment(comment.createdAt).format("MMMM Do YYYY, h:mm A")}
                     </p>
+                    {isLoggedIn &&
+                      JSON.parse(localStorage.getItem("user"))?._id ===
+                        comment.user_id?._id && (
+                        <div className="d-flex gap-2">
+                          {editingCommentId === comment._id ? (
+                            <>
+                              <Button
+                                variant="success"
+                                size="sm"
+                                onClick={() => handleEditComment(comment._id)}
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setEditingCommentId(null)}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                variant="warning"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingCommentId(comment._id);
+                                  setEditedComment(comment.comment_text);
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleDeleteComment(comment._id)}
+                              >
+                                Delete
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      )}
                   </div>
                 </div>
               </li>
@@ -201,13 +311,11 @@ function GameModal({ show, onHide, game }) {
 
         {isLoggedIn ? (
           <Form>
-            {/* Success message */}
             {commentSubmitted && (
               <Alert variant="success" className="text-center mt-3">
                 Comment submitted!
               </Alert>
             )}
-
             <Form.Group className="mb-3">
               <Form.Label>Leave a Comment</Form.Label>
               <Form.Control
@@ -217,7 +325,6 @@ function GameModal({ show, onHide, game }) {
                 onChange={(e) => setComment(e.target.value)}
               />
             </Form.Group>
-
             <Button variant="primary" onClick={handleCommentSubmit}>
               Submit Comment
             </Button>
