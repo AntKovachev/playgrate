@@ -22,10 +22,14 @@ const Login = () => {
             const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
             console.log("Response from backend:", response.data);
 
+            const user = { ...response.data.user, _id: response.data.user.id };
+            delete user.id;
+
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(user));
 
             setIsLoggedIn(true);
-            setUserData({ token: response.data.token, ...response.data.user });
+            setUserData({ token: response.data.token, ...user });
 
             navigate("/");
         } catch (err) {
