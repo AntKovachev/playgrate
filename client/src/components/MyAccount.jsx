@@ -6,7 +6,10 @@ import axios from "axios";
 
 function MyAccount() {
   const { isLoggedIn, userData } = useContext(AuthContext);
-  const [passwords, setPasswords] = useState({ currentPassword: "", newPassword: "" });
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -17,7 +20,6 @@ function MyAccount() {
     }
   }, [isLoggedIn, navigate]);
 
-
   const handlePasswordChange = async (e) => {
     e.preventDefault();
 
@@ -25,6 +27,7 @@ function MyAccount() {
       const response = await axios.post(
         "http://localhost:5000/api/auth/change-password",
         {
+          id: userData._id,
           currentPassword: passwords.currentPassword,
           newPassword: passwords.newPassword,
         },
@@ -38,7 +41,7 @@ function MyAccount() {
       setMessage(response.data.message);
       setPasswords({ currentPassword: "", newPassword: "" });
     } catch (error) {
-        console.error("Error changing password:", error);
+      console.error("Error changing password:", error);
       setError(error.response?.data?.error || "An error occurred.");
     }
   };
@@ -52,8 +55,12 @@ function MyAccount() {
         <Card.Body>
           <div className="mb-4">
             <h4 className="text-warning">Account Information</h4>
-            <p><strong>Username:</strong> {userData.username}</p>
-            <p><strong>Email:</strong> {userData.email}</p>
+            <p>
+              <strong>Username:</strong> {userData.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {userData.email}
+            </p>
           </div>
 
           <div>
@@ -67,7 +74,12 @@ function MyAccount() {
                   type="password"
                   placeholder="Enter current password"
                   value={passwords.currentPassword}
-                  onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
+                  onChange={(e) =>
+                    setPasswords({
+                      ...passwords,
+                      currentPassword: e.target.value,
+                    })
+                  }
                   required
                   className="bg-secondary text-light border-0"
                 />
@@ -78,7 +90,9 @@ function MyAccount() {
                   type="password"
                   placeholder="Enter new password"
                   value={passwords.newPassword}
-                  onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+                  onChange={(e) =>
+                    setPasswords({ ...passwords, newPassword: e.target.value })
+                  }
                   required
                   className="bg-secondary text-light border-0"
                 />

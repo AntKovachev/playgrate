@@ -6,14 +6,14 @@ function useFetchGameTrailers(gameId) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!gameId) return; // Ensure gameId is valid before making the API call
+        if (!gameId) return;
 
         const fetchGameTrailers = async () => {
             setLoading(true);
 
             try {
                 const response = await axios.get(`https://api.rawg.io/api/games/${gameId}/movies?key=19e2812a3b574f739acba93c39ae2213`);
-                setTrailers(response.data.results || []); // Default to an empty array if no results
+                setTrailers(response.data.results || []);
             } catch (error) {
                 console.error("Error fetching game trailers:", error);
             } finally {
