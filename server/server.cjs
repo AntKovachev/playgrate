@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes.cjs");
+const commentRoutes = require("./routes/commentRoutes.cjs");
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
