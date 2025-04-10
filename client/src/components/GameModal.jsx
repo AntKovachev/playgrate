@@ -3,6 +3,7 @@ import { Modal, Button, Form, Carousel, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./Auth/AuthContext";
 import useFetchGameTrailers from "../hooks/useFetchGameTrailers";
+import moment from "moment";  // Import moment.js for date formatting
 
 function GameModal({ show, onHide, game }) {
   const [comment, setComment] = useState("");
@@ -185,6 +186,10 @@ function GameModal({ show, onHide, game }) {
                       {comment.user_id?.username || "Unknown User"}
                     </p>
                     <p className="mb-0 text-muted">{comment.comment_text}</p>
+                    {/* Display comment time */}
+                    <p className="text-muted mt-2" style={{ fontSize: "0.7rem"}}>
+                      {moment(comment.createdAt).format("MMMM Do YYYY, h:mm A")}
+                    </p>
                   </div>
                 </div>
               </li>

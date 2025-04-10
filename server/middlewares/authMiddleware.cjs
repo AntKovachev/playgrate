@@ -4,7 +4,10 @@ const User = require("../models/User.cjs");
 const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     token = req.headers.authorization.split(" ")[1];
   }
 
@@ -13,12 +16,17 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "defaultsecret");
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "defaultsecret"
+    );
     req.user = await User.findById(decoded.id).select("-password");
     next();
   } catch (error) {
-    console.error("Error verifying token:", error);
-    res.status(401).json({ message: "Not authorized, invalid token" });
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      console.error("Error verifying token:", error);
+      res.status(401).json({ message: "Not authorized, invalid token" });
   }
 };
 
