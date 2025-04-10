@@ -21,4 +21,17 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/:rawg_game_id", async (req, res) => {
+    const { rawg_game_id } = req.params;
+
+    try {
+      const comments = await Comment.find({ rawg_game_id }).sort({ created_at: -1 });
+      res.json(comments);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+
 module.exports = router;

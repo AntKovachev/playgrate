@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button, Form, Carousel, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./Auth/AuthContext";
@@ -6,22 +6,70 @@ import useFetchGameTrailers from "../hooks/useFetchGameTrailers";
 
 function GameModal({ show, onHide, game }) {
   const [comment, setComment] = useState("");
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const [comments, setComments] = useState([]);
+  const { isLoggedIn } = useContext(AuthContext);
 
-  // Fetch trailers for the selected game
   const { trailers, loading: trailersLoading } = useFetchGameTrailers(game?.id);
 
-  const handleCommentSubmit = () => {
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/comments/${game.id}`);
+        const data = await response.json();
+        setComments(data);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+
+    if (game) {
+      fetchComments();
+    }
+  }, [game]);
+
+  const handleCommentSubmit = async () => {
     if (!isLoggedIn) {
       alert("You need to log in to leave a comment.");
       return;
     }
-    console.log("Comment submitted:", comment);
-    setComment(""); // Clear the comment field
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?._id;
+
+    if (!userId) {
+      alert("User ID not found.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rawg_game_id: game.id,
+          user_id: userId,
+          comment_text: comment,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit comment");
+      }
+
+      const data = await response.json();
+      setComments((prevComments) => [data, ...prevComments]);
+      setComment("");
+      alert("Comment submitted!");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+      alert("Something went wrong.");
+    }
   };
 
   if (!game) {
-    return null; // Return null if game is undefined
+    return null;
   }
 
   return (
@@ -94,6 +142,20 @@ function GameModal({ show, onHide, game }) {
         <hr />
 
         {/* Comment Section */}
+        <h5>Comments</h5>
+        {comments.length > 0 ? (
+          <ul>
+            {comments.map((comment) => (
+              <li key={comment._id}>
+                <p>{comment.comment_text}</p>
+                <small>By: {comment.user_id}</small>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No comments yet. Be the first to comment!</p>
+        )}
+
         {isLoggedIn ? (
           <Form>
             <Form.Group className="mb-3">
