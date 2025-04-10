@@ -5,22 +5,25 @@ const Comment = require("../models/Comment.cjs");
 
 // POST /comments
 router.post("/", async (req, res) => {
-  try {
-    const { rawg_game_id, user_id, comment_text } = req.body;
+    try {
+      const { rawg_game_id, user_id, comment_text } = req.body;
 
-    if (!rawg_game_id || !user_id || !comment_text) {
-      return res.status(400).json({ error: "Missing required fields" });
+      if (!rawg_game_id || !user_id || !comment_text) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const newComment = new Comment({ rawg_game_id, user_id, comment_text });
+      await newComment.save();
+
+      // Populate the user_id field with the username
+      const populatedComment = await newComment.populate("user_id", "username email");
+
+      res.status(201).json(populatedComment);
+    } catch (err) {
+      console.error("Error saving comment:", err);
+      res.status(500).json({ error: "Server error" });
     }
-
-    const newComment = new Comment({ rawg_game_id, user_id, comment_text });
-    await newComment.save();
-
-    res.status(201).json(newComment);
-  } catch (err) {
-    console.error("Error saving comment:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  });
 
 // GET /comments/:rawg_game_id
 router.get("/:rawg_game_id", async (req, res) => {
@@ -29,7 +32,7 @@ router.get("/:rawg_game_id", async (req, res) => {
   try {
     const comments = await Comment.find({ rawg_game_id }).sort({
       created_at: -1,
-    });
+    }).populate("user_id", "username email");
     res.json(comments);
   } catch (err) {
     console.error("Error fetching comments:", err);
