@@ -6,9 +6,11 @@ import Register from './components/Auth/Register';
 import TopNavbar from './components/TopNavbar';
 import MyAccount from "./components/MyAccount";
 import { AuthProvider } from './components/Auth/AuthContext';
+import RedirectIfLoggedIn from './components/RedirectIfLoggedIn';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+
 
 function App() {
     return (
@@ -17,9 +19,23 @@ function App() {
                 <TopNavbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/my-account" element={<MyAccount/>} />
+                    <Route
+                        path="/login"
+                        element={
+                            <RedirectIfLoggedIn>
+                                <Login />
+                            </RedirectIfLoggedIn>
+                        }
+                    />
+                    <Route
+                        path="/register"
+                        element={
+                            <RedirectIfLoggedIn>
+                                <Register />
+                            </RedirectIfLoggedIn>
+                        }
+                    />
+                    <Route path="/my-account" element={<MyAccount />} />
                 </Routes>
             </Router>
         </AuthProvider>
