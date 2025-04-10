@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal, Button, Form, Carousel, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { AuthContext } from "./Auth/AuthContext";
 import useFetchGameTrailers from "../hooks/useFetchGameTrailers";
 
 function GameModal({ show, onHide, game }) {
   const [comment, setComment] = useState("");
-  const isLoggedIn = false; // Replace with actual authentication logic
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   // Fetch trailers for the selected game
   const { trailers, loading: trailersLoading } = useFetchGameTrailers(game?.id);
