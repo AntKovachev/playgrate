@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
 import GameModal from "./GameModal";
 import CustomPagination from "./Pagination";
+import "../assets/css/GameGrid.css";
 
 function GameGrid({ games, loading }) {
   const [selectedGame, setSelectedGame] = useState(null);
@@ -23,7 +24,7 @@ function GameGrid({ games, loading }) {
   };
 
   return (
-    <Container className="pt-3">
+    <Container className="game-grid pt-3">
       {loading ? (
         <div className="d-flex justify-content-center my-5">
           <Spinner animation="border" variant="light" />
@@ -34,7 +35,7 @@ function GameGrid({ games, loading }) {
             {paginatedGames.map((game) => (
               <Col key={game.id} xs={12} sm={6} md={4}>
                 <Card
-                  className="bg-dark text-light h-100"
+                  className="game-card bg-dark text-light h-100"
                   onClick={() => handleGameClick(game)}
                   style={{ cursor: "pointer" }}
                 >
