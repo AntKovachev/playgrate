@@ -3,11 +3,14 @@ import { Container, Navbar, Button, Nav, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./Auth/AuthContext";
 import SearchBar from "./SearchBar";
+import GameModal from "./GameModal";
 
 function TopNavbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [logoutMessage, setLogoutMessage] = useState("");
+  const [selectedGame, setSelectedGame] = useState(null); // State for the selected game
+  const [showModal, setShowModal] = useState(false); // State for the modal visibility
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -21,11 +24,20 @@ function TopNavbar() {
     console.log("Search query:", query);
   };
 
+  const handleGameSelect = (game) => {
+    setSelectedGame(game); // Set the selected game
+    setShowModal(true); // Show the modal
+  };
+
   return (
     <>
       <Navbar expand="lg" className="bg-dark fixed-top py-3 shadow-sm">
         <Container>
-          <Navbar.Brand as={Link} to="/" className="fs-2 fw-bold text-light d-flex align-items-center">
+          <Navbar.Brand
+            as={Link}
+            to="/"
+            className="fs-2 fw-bold text-light d-flex align-items-center"
+          >
             <i className="bi bi-controller me-2"></i> PlayGreat
           </Navbar.Brand>
 
@@ -36,6 +48,7 @@ function TopNavbar() {
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               onSearch={handleSearch}
+              onGameSelect={handleGameSelect} // Pass the callback to SearchBar
             />
 
             <div className="d-flex align-items-center ms-auto">
@@ -88,6 +101,15 @@ function TopNavbar() {
         <Alert variant="success" className="text-center mt-5">
           {logoutMessage}
         </Alert>
+      )}
+
+      {/* Game Modal */}
+      {selectedGame && (
+        <GameModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          game={selectedGame}
+        />
       )}
     </>
   );

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, InputGroup, Button, ListGroup, Spinner } from "react-bootstrap";
 import useFetchGames from "../hooks/useFetchGames";
 
-function SearchBar({ searchTerm, setSearchTerm, onSearch }) {
+function SearchBar({ searchTerm, setSearchTerm, onSearch, onGameSelect }) {
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm || "");
   const { games: suggestions, loading } = useFetchGames(null, localSearchTerm);
 
@@ -11,6 +11,9 @@ function SearchBar({ searchTerm, setSearchTerm, onSearch }) {
     setLocalSearchTerm(game.name);
     if (onSearch) {
       onSearch(game.name);
+    }
+    if (onGameSelect) {
+      onGameSelect(game); // Trigger the callback when a game is selected
     }
   };
 
@@ -60,7 +63,9 @@ function SearchBar({ searchTerm, setSearchTerm, onSearch }) {
                 className="d-flex align-items-center"
               >
                 <img
-                  src={game.background_image || "https://via.placeholder.com/50"}
+                  src={
+                    game.background_image || "https://via.placeholder.com/50"
+                  }
                   alt={game.name}
                   className="me-2 rounded"
                   style={{ width: "50px", height: "50px", objectFit: "cover" }}
