@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Container, Navbar, Button, Nav, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Ensure useNavigate is imported
 import { AuthContext } from "./Auth/AuthContext";
 import SearchBar from "./SearchBar";
 import GameModal from "./GameModal";
@@ -11,6 +11,7 @@ function TopNavbar() {
   const [logoutMessage, setLogoutMessage] = useState("");
   const [selectedGame, setSelectedGame] = useState(null); // State for the selected game
   const [showModal, setShowModal] = useState(false); // State for the modal visibility
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -25,14 +26,18 @@ function TopNavbar() {
     setShowModal(true); // Show the modal
   };
 
+  const handleLogoClick = () => {
+    navigate("/"); // Redirect to the home page
+  };
+
   return (
     <>
       <Navbar expand="lg" className="bg-dark fixed-top py-3 shadow-sm">
         <Container>
           <Navbar.Brand
-            as={Link}
-            to="/"
+            onClick={handleLogoClick} // Use the handleLogoClick function
             className="fs-2 fw-bold text-light d-flex align-items-center"
+            style={{ cursor: "pointer" }} // Add pointer cursor for better UX
           >
             <i className="bi bi-controller me-2"></i> PlayGreat
           </Navbar.Brand>
